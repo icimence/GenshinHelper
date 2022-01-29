@@ -14,7 +14,7 @@ protocol.registerSchemesAsPrivileged([
 	{scheme: 'app', privileges: {secure: true, standard: true}}
 ])
 let win
-localConfig.setStoragePath(path.join(os.homedir(),'./.genshinHelper.json'))
+localConfig.setStoragePath(path.join(os.homedir(), './.genshinHelper.json'))
 
 async function createWindow() {
 	// Create the browser window.
@@ -98,45 +98,47 @@ app.on('ready', async () => {
 			console.error('Vue Devtools failed to install:', e.toString())
 		}
 	}
-	const icon = nativeImage.createFromPath(path.join(__static,'./32x32.png'))
-	tray = new Tray(icon);
-	const contextMenu = Menu.buildFromTemplate([
-		{
-			label: '显示/隐藏',
-			click: () => {
-				BrowserWindow.getAllWindows().forEach(i => {
-					if (i.isVisible()) {
-						i.hide()
-					} else {
-						i.show()
-					}
-				})
+	if (localConfig.getItem('hide') === 'true') {
+		const icon = nativeImage.createFromPath(path.join(__static, './32x32.png'))
+		tray = new Tray(icon);
+		const contextMenu = Menu.buildFromTemplate([
+			{
+				label: '显示/隐藏',
+				click: () => {
+					BrowserWindow.getAllWindows().forEach(i => {
+						if (i.isVisible()) {
+							i.hide()
+						} else {
+							i.show()
+						}
+					})
+				}
+			},
+			{
+				label: '退出',
+				click: () => {
+					BrowserWindow.getAllWindows().forEach(i => {
+						i.close()
+						i.destroy()
+						i = null
+					})
+					app.quit()
+				}
 			}
-		},
-		{
-			label: '退出',
-			click: () => {
-				BrowserWindow.getAllWindows().forEach(i => {
-					i.close()
-					i.destroy()
-					i = null
-				})
-				app.quit()
-			}
-		}
-	])
+		])
 
-	tray.setContextMenu(contextMenu)
-	tray.setToolTip('GenshinHelper')
-	tray.on('click', () => {
-		BrowserWindow.getAllWindows().forEach(i => {
-			if (i.isVisible())
-				i.hide()
-			else
-				i.show()
+		tray.setContextMenu(contextMenu)
+		tray.setToolTip('GenshinHelper')
+		tray.on('click', () => {
+			BrowserWindow.getAllWindows().forEach(i => {
+				if (i.isVisible())
+					i.hide()
+				else
+					i.show()
+			})
 		})
-	})
-	tray.setTitle('This is my title')
+		tray.setTitle('This is my title')
+	}
 	createWindow()
 })
 

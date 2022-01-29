@@ -6,7 +6,15 @@ const basePath = path.join(os.tmpdir(), '../../LocalLow/miHoYo/原神/output_log
 const baseURL = 'https://hk4e-api.mihoyo.com/event/gacha_info/api/getGachaLog'
 const gachaUrlParse = {
 	url: '',
-	getGachaURL: () => {
+	getUrl: () => {
+		return gachaUrlParse.url
+	},
+	setUrl: (url) => {
+		gachaUrlParse.url = url
+	},
+	getGachaURL: (gachaType, callback) => {
+		let gachaURL = new URL(baseURL)
+		let flag = true
 		const lineReader = readline.createInterface({
 			input: fs.createReadStream(basePath),
 			output: process.stdout,
@@ -16,19 +24,44 @@ const gachaUrlParse = {
 			if (line.toString().startsWith('OnGetWebViewPageFinish:') && line.toString().endsWith('#/log')) {
 				let temp = new URL(line.toString().substring(23, line.toString().length - 5))
 				let authSearch = new URLSearchParams(temp.searchParams)
-				authSearch.append('gacha_type','301')
-				authSearch.append('end_id','0')
-				authSearch.append('size','20')
+				authSearch.append('gacha_type', gachaType)
+				authSearch.append('end_id', '0')
+				authSearch.append('size', '20')
 				authSearch.delete('timestamp')
 				let timestamp = new Date().getTime()
 				timestamp = Math.floor(timestamp / 1000)
 				authSearch.append('timestamp', timestamp.toString())
-				let gachaURL = new URL(baseURL)
 				gachaURL.search = authSearch
 				console.log(gachaURL.href)
-				gachaUrlParse.url = gachaURL
+				gachaUrlParse.setUrl(gachaURL.href)
 			}
 		})
+		lineReader.on('close', () => {
+				if (gachaUrlParse.getUrl() === '') {
+					const NOTIFICATION_TITLE = '通知'
+					const NOTIFICATION_BODY = '获取url数据失败，请打开祈愿界面'
+					const CLICK_MESSAGE = '通知已被点击'
+					new Notification(NOTIFICATION_TITLE, {body: NOTIFICATION_BODY})
+						.onclick = () => document.getElementById("output").innerText = CLICK_MESSAGE
+					flag = false
+				}
+			}
+		)
+		callback(flag ? gachaUrlParse.getUrl() : '')
+	},
+	changeRequestParamEndId: (url, endId) => {
+		let tempUrl = new URL(url)
+		let tempSearchParam = new URLSearchParams(tempUrl.searchParams)
+		tempSearchParam.delete('end_id')
+		tempSearchParam.append('end_id', endId.toString())
+		tempSearchParam.delete('timestamp')
+		let timestamp = new Date().getTime()
+		timestamp = Math.floor(timestamp / 1000)
+		tempSearchParam.append('timestamp', timestamp.toString())
+		tempUrl.search = tempSearchParam
+		console.log(tempUrl)
+		gachaUrlParse.setUrl(tempUrl.href)
+		return tempUrl.href
 	}
 }
 export default gachaUrlParse

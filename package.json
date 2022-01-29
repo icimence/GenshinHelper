@@ -2,6 +2,8 @@
   "name": "genshinjs",
   "version": "0.1.0",
   "private": true,
+  "author": "icimence",
+  "description": "a genshin gacha data export software",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
