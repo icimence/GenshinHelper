@@ -44,10 +44,11 @@ const gachaUrlParse = {
 					new Notification(NOTIFICATION_TITLE, {body: NOTIFICATION_BODY})
 						.onclick = () => document.getElementById("output").innerText = CLICK_MESSAGE
 					flag = false
-				}
+					callback('')
+				} else
+					callback(gachaUrlParse.getUrl())
 			}
 		)
-		callback(flag ? gachaUrlParse.getUrl() : '')
 	},
 	changeRequestParamEndId: (url, endId) => {
 		let tempUrl = new URL(url)
