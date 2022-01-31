@@ -26,7 +26,7 @@ const gachaUrlParse = {
 				let authSearch = new URLSearchParams(temp.searchParams)
 				authSearch.append('gacha_type', gachaType)
 				authSearch.append('end_id', '0')
-				authSearch.append('size', '20')
+				authSearch.append('size', '6')
 				authSearch.delete('timestamp')
 				let timestamp = new Date().getTime()
 				timestamp = Math.floor(timestamp / 1000)

@@ -19,8 +19,8 @@ localConfig.setStoragePath(path.join(os.homedir(), './.genshinHelper.json'))
 async function createWindow() {
 	// Create the browser window.
 	win = new BrowserWindow({
-		width: 800,
-		height: 600,
+		width: 1075,
+		height: 750,
 		webPreferences: {
 
 			// Use pluginOptions.nodeIntegration, leave this alone
