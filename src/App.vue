@@ -44,7 +44,7 @@
 				</template>
 			</t-menu>
 		</div>
-		<router-view/>
+		<router-view class="content_container"/>
 	</div>
 </template>
 
@@ -80,6 +80,9 @@ export default {
 .appContainer {
 	display: flex;
 	flex-direction: row;
+}
+.content_container{
+	margin-left: 20px;
 }
 
 .operations-icon {
