@@ -1,9 +1,11 @@
 <template>
 	<div class="appContainer">
-		<div>
-			<t-menu theme="light" default-value="item1" :collapsed="collapsed" style="height: 100vh;background-color: #f7f7f7;border-right:solid 1px gainsboro">
+		<div @mouseenter="unfold" @mouseleave="fold" style="z-index: 1">
+			<t-menu theme="light" default-value="item1" :collapsed="collapsed"
+			        style="height: 100vh;background-color: #f7f7f7;border-right:solid 1px gainsboro">
 				<template #logo @click="$router.push('/')">
-					<div style="display: flex;flex-direction: row;justify-content: center;align-items: center;height: inherit;width: inherit">
+					<div
+						style="display: flex;flex-direction: row;justify-content: center;align-items: center;height: inherit;width: inherit">
 						<img
 							:src="collapsed? 'https://oteam-tdesign-1258344706.cos.ap-guangzhou.myqcloud.com/site/logo%402x.png': 'https://www.tencent.com/img/index/menu_logo_hover.png'"
 							:width="collapsed? 35:136" alt="logo">
@@ -50,18 +52,27 @@
 
 <script>
 import {ref, computed} from 'vue';
-
+import localConfig from '@/store/localStorage.js'
 export default {
 	setup() {
 		const collapsed = ref(true)
 		const iconName = computed(() => (collapsed.value ? 'chevron-right' : 'chevron-left'));
-		
+		const sidebarSetting = ref(localConfig.getItem('sidebar') === 'true')
 		const changeCollapsed = () => {
 			collapsed.value = !collapsed.value;
 		};
+		const unfold = () =>{
+			if (!sidebarSetting.value)
+				collapsed.value = false
+		}
+		const fold=()=>{
+			collapsed.value = true
+		}
 		return {
 			collapsed,
 			iconName,
+			fold,
+			unfold,
 			changeCollapsed
 		}
 	}
@@ -81,8 +92,10 @@ export default {
 	display: flex;
 	flex-direction: row;
 }
-.content_container{
-	margin-left: 20px;
+
+.content_container {
+	left: 64px;
+	position: absolute;
 }
 
 .operations-icon {

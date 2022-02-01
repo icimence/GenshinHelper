@@ -2,25 +2,30 @@
 	<div class="container">
 		<div class="titleContainer">
 			<h2>祈愿概览</h2>
+			<t-button theme="primary" shape="round" variant="base" @click="getData"> 获取角色祈愿池数据</t-button>
 			<div class="switchesContainer"></div>
 		</div>
 		<div class="chartContainer">
-			<div class="card">
-				<h4>限定角色池</h4>
-				<div id="301" class="chart"></div>
-			</div>
-			<div class="card">
-				<h4>限定武器池</h4>
-				<div id="302" class="chart"></div>
-			</div>
-			<div class="card">
-				<h4>常驻池</h4>
-				<div id="200" class="chart"></div>
-			</div>
+			<t-loading size="medium" :loading="!limitGacha.initState" text="数据加载中" show-overlay>
+				<div class="card">
+					<h4>限定角色池</h4>
+					<div id="301" class="chart"></div>
+				</div>
+			</t-loading>
+			<t-loading size="medium" :loading="!weaponGacha.initState" text="数据加载中" show-overlay>
+				<div class="card">
+					<h4>限定武器池</h4>
+					<div id="302" class="chart"></div>
+				</div>
+			</t-loading>
+			<t-loading size="medium" :loading="!commonGacha.initState" text="数据加载中" show-overlay>
+				<div class="card">
+					<h4>常驻池</h4>
+					<div id="200" class="chart"></div>
+				</div>
+			</t-loading>
 		</div>
 	</div>
-	<t-button theme="primary" shape="round" variant="base" @click="getData"> 获取角色祈愿池数据</t-button>
-	<t-button theme="primary" shape="round" variant="base" @click="setChart"> 渲染数据</t-button>
 </template>
 
 <script>
@@ -46,10 +51,10 @@ export default {
 		const gachaTypeList = ref(['301', '302', '200'])
 		const limitChart = ref()
 		const weaponChart = ref()
-		const commonChart =ref()
+		const commonChart = ref()
 		
-		const destroyChartIfExists=(chart)=>{
-			if (chart !== null&& chart !== undefined && chart !=='')
+		const destroyChartIfExists = (chart) => {
+			if (chart !== null && chart !== undefined && chart !== '')
 				chart.dispose()
 		}
 		
@@ -115,7 +120,7 @@ export default {
 					}
 				]
 			})
-			switch (chartType){
+			switch (chartType) {
 				case '301':
 					destroyChartIfExists(limitChart.value)
 					limitChart.value = echarts.init(chartDom)
@@ -137,12 +142,12 @@ export default {
 			}
 		}
 		onMounted(() => {
-			if (limitGacha.initState)
-				setChart('301')
-			if (weaponGacha.initState)
-				setChart('302')
-			if (commonGacha.initState)
-				setChart('200')
+			// if (limitGacha.initState)
+			setChart('301')
+			// if (weaponGacha.initState)
+			setChart('302')
+			// if (commonGacha.initState)
+			setChart('200')
 		})
 		const getData = () => {
 			limitGacha.$reset()
@@ -208,6 +213,9 @@ export default {
 		}
 		return {
 			str,
+			limitGacha,
+			commonGacha,
+			weaponGacha,
 			getData,
 			setChart
 		}
@@ -234,6 +242,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.titleContainer{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
 .card {
 	width: 300px;
 	height: 600px;
@@ -241,7 +254,8 @@ export default {
 	flex-direction: column;
 	align-items: center;
 }
-.chart{
+
+.chart {
 	width: inherit;
 	height: 300px;
 }
@@ -254,6 +268,8 @@ export default {
 .chartContainer {
 	display: flex;
 	flex-direction: row;
+	justify-content: center;
+	width: inherit;
 }
 
 h3 {
