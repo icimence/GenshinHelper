@@ -13,19 +13,23 @@
 </template>
 <script>
 import localConfig from '../store/localStorage.js'
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import {useSettingStore} from "@/store/settingStore";
+
 export default {
 	setup() {
 		const hideChecked = ref(localConfig.getItem('hide') === 'true');
-		const sidebarChecked = ref(localConfig.getItem('sidebar') === 'true')
+		let settingStore = useSettingStore()
+		const sidebarChecked = ref(settingStore.sidebar)
 		const hideSetting = () => {
 			console.log('00000000000000000')
 			localConfig.setItem('hide', (!hideChecked.value).toString())
 			console.log(localConfig.getItem('hide'))
 			console.log(localConfig.configUrl)
 		}
-		const sidebarSetting = ()=>{
-			localConfig.setItem('sidebar',(!sidebarChecked.value).toString())
+		const sidebarSetting = () => {
+			localConfig.setItem('sidebar', (!sidebarChecked.value).toString())
+			settingStore.sidebar = !sidebarChecked.value
 		}
 		return {
 			hideChecked,
@@ -37,7 +41,7 @@ export default {
 }
 </script>
 <style>
-.about{
+.about {
 	margin-left: 200px;
 }
 </style>

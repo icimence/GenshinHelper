@@ -34,7 +34,7 @@
 					</template>
 					视频区
 				</t-menu-item>
-				<t-menu-item value="item3" @click="$router.push('/about')">
+				<t-menu-item value="item3" @click="$router.push('/settings')">
 					<template #icon>
 						<t-icon name="setting"/>
 					</template>
@@ -51,21 +51,28 @@
 </template>
 
 <script>
-import {ref, computed} from 'vue';
+import {ref, computed, onMounted, watch, watchEffect} from 'vue';
 import localConfig from '@/store/localStorage.js'
+import {useSettingStore} from "@/store/settingStore";
+
 export default {
 	setup() {
 		const collapsed = ref(true)
 		const iconName = computed(() => (collapsed.value ? 'chevron-right' : 'chevron-left'));
 		const sidebarSetting = ref(localConfig.getItem('sidebar') === 'true')
+		const settingStore = useSettingStore()
+		watchEffect(() => {
+			console.log(settingStore.sidebar)
+			sidebarSetting.value = settingStore.sidebar
+		})
 		const changeCollapsed = () => {
 			collapsed.value = !collapsed.value;
 		};
-		const unfold = () =>{
+		const unfold = () => {
 			if (!sidebarSetting.value)
 				collapsed.value = false
 		}
-		const fold=()=>{
+		const fold = () => {
 			collapsed.value = true
 		}
 		return {
