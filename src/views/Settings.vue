@@ -18,9 +18,9 @@ import {useSettingStore} from "@/store/settingStore";
 
 export default {
 	setup() {
-		const hideChecked = ref(localConfig.getItem('hide') === 'true');
 		let settingStore = useSettingStore()
 		const sidebarChecked = ref(settingStore.sidebar)
+		const hideChecked = ref(settingStore.hide)
 		const hideSetting = () => {
 			console.log('00000000000000000')
 			localConfig.setItem('hide', (!hideChecked.value).toString())

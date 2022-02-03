@@ -2,8 +2,8 @@ const os = require('os')
 const path = require('path')
 const readline = require('readline')
 const fs = require('fs')
-// const basePath = path.join(os.tmpdir(), '../../LocalLow/miHoYo/原神/output_log.txt')
-const basePath = path.join(os.tmpdir(), '../../LocalLow/test.txt')
+const basePath = path.join(os.tmpdir(), '../../LocalLow/miHoYo/原神/output_log.txt')
+// const basePath = path.join(os.tmpdir(), '../../LocalLow/test.txt')
 const baseURL = 'https://hk4e-api.mihoyo.com/event/gacha_info/api/getGachaLog'
 const gachaUrlParse = {
 	url: '',
